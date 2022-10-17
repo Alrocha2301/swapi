@@ -19,16 +19,14 @@ public class PlanetService {
         return planetRepository.save(planet);
     }
 
-    public Planet getById(Long id) {
-        Optional<Planet> optional = planetRepository.findById(id);
+    public Optional<Planet> getById(Long id) {
 
-        return optional.get();
+        return planetRepository.findById(id);
     }
 
-    public Planet getByName(String name) {
-        Optional<Planet> optional = planetRepository.findByName(name);
+    public Optional<Planet> getByName(String name) {
 
-        return optional.get();
+        return planetRepository.findByName(name);
     }
 
     public void deletePlanets() {

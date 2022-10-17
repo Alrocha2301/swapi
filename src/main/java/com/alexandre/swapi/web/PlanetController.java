@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/planets")
 public class PlanetController {
@@ -25,16 +27,19 @@ public class PlanetController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Planet> getById(@PathVariable Long id) {
-        Planet gettedPlanet = planetService.getById(id);
+        Optional<Planet> gettedPlanet = planetService.getById(id);
 
-        return ResponseEntity.status(HttpStatus.OK).body(gettedPlanet);
+        if (gettedPlanet.isPresent()) {
+            return ResponseEntity.status(HttpStatus.OK).body(gettedPlanet.get());
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @GetMapping("/names/{name}")
     public ResponseEntity<Planet> getById(@PathVariable String name) {
-        Planet gettedPlanet = planetService.getByName(name);
+        Optional<Planet> gettedPlanet = planetService.getByName(name);
 
-        return ResponseEntity.status(HttpStatus.OK).body(gettedPlanet);
+        return ResponseEntity.status(HttpStatus.OK).body(gettedPlanet.get());
     }
 
     @DeleteMapping

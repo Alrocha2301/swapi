@@ -8,9 +8,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
+
 import static com.alexandre.swapi.common.PlanetConstants.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -31,7 +34,6 @@ class PlanetServiceTest {
 
         assertEquals(planet, PLANET);
         assertThat(planet).isEqualTo(PLANET);
-
     }
 
     @Test
@@ -40,7 +42,23 @@ class PlanetServiceTest {
 
         assertThrows(RuntimeException.class, () -> planetService.create(INVALID_PLANET));
         assertThatThrownBy(() -> planetService.create(INVALID_PLANET)).isInstanceOf(RuntimeException.class);
-
     }
 
+    @Test
+    public void getById_ByExistingId_ReturnsPlanet() {
+        when(planetRepository.findById(anyLong())).thenReturn(Optional.of(PLANET));
+
+        Optional<Planet> planet = planetService.getById(1l);
+
+        assertTrue(PLANET.equals(planet.get()));
+    }
+
+    @Test
+    public void getById_ByNotExistingId_ReturnsEmpty() {
+        when(planetRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+        Optional<Planet> planet = planetRepository.findById(1l);
+
+        assertTrue(planet.isEmpty());
+    }
 }
