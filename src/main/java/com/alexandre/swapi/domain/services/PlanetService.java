@@ -25,4 +25,14 @@ public class PlanetService {
         return optional.get();
     }
 
+    public Planet getByName(String name) {
+        Optional<Planet> optional = planetRepository.findByName(name);
+
+        return optional.get();
+    }
+
+    public void deletePlanets() {
+        planetRepository.deleteAll();
+    }
+
 }

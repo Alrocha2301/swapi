@@ -30,6 +30,19 @@ public class PlanetController {
         return ResponseEntity.status(HttpStatus.OK).body(gettedPlanet);
     }
 
+    @GetMapping("/names/{name}")
+    public ResponseEntity<Planet> getById(@PathVariable String name) {
+        Planet gettedPlanet = planetService.getByName(name);
+
+        return ResponseEntity.status(HttpStatus.OK).body(gettedPlanet);
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Planet> deleteAll() {
+        planetService.deletePlanets();
+
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 
 
 
