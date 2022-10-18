@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -25,6 +27,16 @@ public class PlanetController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdPlanet);
     }
 
+    @GetMapping
+    public ResponseEntity<List<Planet>> getAll(@RequestParam(required = false) String terrain,
+                                               @RequestParam(required = false) String climate) {
+
+//        List<Planet> list = planetService.getAll();
+
+        return ResponseEntity.ok(new ArrayList<>());
+    }
+
+
     @GetMapping("/{id}")
     public ResponseEntity<Planet> getById(@PathVariable Long id) {
         Optional<Planet> gettedPlanet = planetService.getById(id);
@@ -36,7 +48,7 @@ public class PlanetController {
     }
 
     @GetMapping("/names/{name}")
-    public ResponseEntity<Planet> getById(@PathVariable String name) {
+    public ResponseEntity<Planet> getByName(@PathVariable String name) {
         Optional<Planet> gettedPlanet = planetService.getByName(name);
 
         return ResponseEntity.status(HttpStatus.OK).body(gettedPlanet.get());

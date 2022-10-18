@@ -14,6 +14,7 @@ import static com.alexandre.swapi.common.PlanetConstants.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -58,6 +59,25 @@ class PlanetServiceTest {
         when(planetRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         Optional<Planet> planet = planetRepository.findById(1l);
+
+        assertTrue(planet.isEmpty());
+    }
+
+    @Test
+    public void getByName_ByExistingName_ReturnsPlanet() {
+        when(planetRepository.findByName(PLANET.getName())).thenReturn(Optional.of(PLANET));
+
+        Optional<Planet> planet = planetRepository.findByName("nome");
+
+        assertTrue(planet.isPresent());
+    }
+
+    @Test
+    public void getByName_ByNotExistingName_ReturnsEmpty() {
+        String name = "outro nome";
+        when(planetRepository.findByName(name)).thenReturn(Optional.empty());
+
+        Optional<Planet> planet = planetRepository.findByName(name);
 
         assertTrue(planet.isEmpty());
     }
