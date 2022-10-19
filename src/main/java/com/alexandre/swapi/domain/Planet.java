@@ -3,6 +3,7 @@ package com.alexandre.swapi.domain;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import java.util.Objects;
 
 @Entity
@@ -12,8 +13,15 @@ public class Planet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotEmpty()
+    @Column(nullable = false, unique = true)
     private String name;
+    @NotEmpty()
+    @Column(nullable = false)
     private String terrain;
+    @NotEmpty()
+    @Column(nullable = false)
     private String climate;
 
     public Planet() {
@@ -30,6 +38,11 @@ public class Planet {
         this.name = name;
         this.terrain = terrain;
         this.climate = climate;
+    }
+
+    public Planet(String climate, String terrain) {
+        this.climate = climate;
+        this.terrain = terrain;
     }
 
     public Long getId() {

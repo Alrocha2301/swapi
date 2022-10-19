@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -21,19 +22,10 @@ public class PlanetController {
     }
 
     @PostMapping
-    public ResponseEntity<Planet> create(@RequestBody Planet planet) {
+    public ResponseEntity<Planet> create(@RequestBody @Valid Planet planet) {
         Planet createdPlanet = planetService.create(planet);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(createdPlanet);
-    }
-
-    @GetMapping
-    public ResponseEntity<List<Planet>> getAll(@RequestParam(required = false) String terrain,
-                                               @RequestParam(required = false) String climate) {
-
-//        List<Planet> list = planetService.getAll();
-
-        return ResponseEntity.ok(new ArrayList<>());
     }
 
 
@@ -47,20 +39,28 @@ public class PlanetController {
         return ResponseEntity.notFound().build();
     }
 
-    @GetMapping("/names/{name}")
+    @GetMapping("/name/{name}")
     public ResponseEntity<Planet> getByName(@PathVariable String name) {
-        Optional<Planet> gettedPlanet = planetService.getByName(name);
+        /*Optional<Planet> gettedPlanet = planetService.getByName(name);
 
-        return ResponseEntity.status(HttpStatus.OK).body(gettedPlanet.get());
+        return ResponseEntity.status(HttpStatus.OK).body(gettedPlanet.get());*/
+
+        return planetService.getByName(name).map(planet -> ResponseEntity.ok(planet))
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @DeleteMapping
-    public ResponseEntity<Planet> deleteAll() {
-        planetService.deletePlanets();
+    @GetMapping
+    public ResponseEntity<List<Planet>> getAll(@RequestParam(required = false) String terrain,
+                                               @RequestParam(required = false) String climate) {
 
-        return ResponseEntity.status(HttpStatus.OK).build();
+
+        return ResponseEntity.ok(planetService.list(terrain, climate));
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Planet> deleteAll(@PathVariable Long id) {
+        planetService.deletePlanet(id);
 
-
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 }

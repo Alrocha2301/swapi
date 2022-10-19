@@ -1,6 +1,7 @@
 package com.alexandre.swapi.domain.services;
 
 import com.alexandre.swapi.domain.Planet;
+import com.alexandre.swapi.domain.QueryBuilder;
 import com.alexandre.swapi.domain.repositories.PlanetRepository;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
@@ -21,32 +22,25 @@ public class PlanetService {
         return planetRepository.save(planet);
     }
 
-    public List<Planet> list() {
-        return planetRepository.findAll();
-    }
-
-    public List<Planet> list(String terrain) {
-        return planetRepository.findByTerrain(terrain);
-    }
-
-    public List<Planet> list(String terrain, String climate) {
-        List<Planet> planets = planetRepository.findByTerrainAndClimate(terrain, climate);
-
-        return planets;
-    }
-
     public Optional<Planet> getById(Long id) {
-
         return planetRepository.findById(id);
     }
 
     public Optional<Planet> getByName(String name) {
-
         return planetRepository.findByName(name);
     }
 
-    public void deletePlanets() {
-        planetRepository.deleteAll();
+    public List<Planet> list() {
+        return planetRepository.findAll();
+    }
+
+    public List<Planet> list(String terrain, String climate) {
+        Example<Planet> query = QueryBuilder.makeQuery(new Planet(climate, terrain));
+        return planetRepository.findAll(query);
+    }
+
+    public void deletePlanet(Long id) {
+        planetRepository.deleteById(id);
     }
 
 }
